@@ -11,12 +11,16 @@
       "resizeMode": "contain",
       "backgroundColor": "#0a1628"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.serenus.app",
       "infoPlist": {
-        "UIBackgroundModes": ["audio"]
+        "UIBackgroundModes": [
+          "audio"
+        ]
       }
     },
     "android": {
@@ -24,11 +28,22 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0a1628"
       },
-      "package": "com.serenus.app"
+      "package": "com.serenus.app",
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-av"]
+    "plugins": [
+      "expo-av"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "3b5a5657-73c2-4eb8-a3ca-a54dd205a1aa"
+      }
+    }
   }
 }
