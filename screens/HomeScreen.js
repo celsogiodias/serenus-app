@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, Linking } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -15,7 +15,7 @@ const CARDS = [
     action: 'emergencia',
   },
   { title: '🎵 Músicas', subtitle: 'Terapia sonora', screen: 'Music' },
-  { title: '📊 Histórico', subtitle: 'Crises registradas', screen: 'Panic' },
+  { title: '🟠 Pânico', subtitle: 'Crises registradas', screen: 'Panic' },
   { title: '⚙️ Ajustes', subtitle: 'Configurações', screen: 'Settings' },
 ];
 
@@ -43,7 +43,6 @@ export default function HomeScreen({ navigation }) {
         <ScrollView contentContainerStyle={{padding:20}}>
           <Text style={{color:'#fff', fontSize:28, fontWeight:'bold', textAlign:'center', marginBottom:4}}>Serenus</Text>
           <Text style={{color:'rgba(255,255,255,0.5)', fontSize:14, textAlign:'center', marginBottom:30}}>Sua plataforma de bem-estar</Text>
-
           <View style={{flexDirection:'row', flexWrap:'wrap', justifyContent:'space-between'}}>
             {CARDS.map((item, index) => {
               const isEmergencia = item.action === 'emergencia';
@@ -54,12 +53,20 @@ export default function HomeScreen({ navigation }) {
                   activeOpacity={0.8}
                   style={{
                     width: '48%',
-                    backgroundColor: isEmergencia ? 'rgba(239,68,68,0.15)' : 'rgba(255,255,255,0.06)',
+                    backgroundColor: isEmergencia
+                      ? 'rgba(239,68,68,0.15)'
+                      : item.title.includes('Pânico')
+                      ? 'rgba(251,146,60,0.35)'
+                      : 'rgba(255,255,255,0.06)',
                     borderRadius: 16,
                     padding: 20,
                     marginBottom: 14,
                     borderWidth: 1,
-                    borderColor: isEmergencia ? 'rgba(239,68,68,0.3)' : 'rgba(155,114,207,0.2)',
+                    borderColor: isEmergencia
+                      ? 'rgba(239,68,68,0.3)'
+                      : item.title.includes('Pânico')
+                      ? 'rgba(251,146,60,0.7)'
+                      : 'rgba(155,114,207,0.2)',
                     alignItems: 'center',
                   }}
                 >

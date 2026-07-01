@@ -1,114 +1,186 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, TextInput, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const TECNICAS = [
-  {
-    id: 'reestruturacao',
-    titulo: '🧠 Reestruturação Cognitiva',
-    tempo: '2 min',
-    descricao: 'Identifique e substitua pensamentos automáticos negativos.',
-    passos: [
-      '1. Qual pensamento está passando pela sua cabeça agora?',
-      '2. Ele é realmente verdade? Há evidências?',
-      '3. Qual seria uma forma mais equilibrada de pensar?',
-      '4. Substitua: "Tudo vai dar errado" → "Vou fazer o meu melhor".',
-    ],
-  },
-  {
-    id: '5sentidos',
-    titulo: '👁️ Técnica dos 5 Sentidos',
-    tempo: '1 min',
-    descricao: 'Ancoragem sensorial para trazer de volta ao presente.',
-    passos: [
-      '5 coisas que você VÊ ao seu redor',
-      '4 coisas que você PODE TOCAR',
-      '3 sons que você OUVE',
-      '2 cheiros que você SENTE',
-      '1 sabor que você PERCEBE',
-    ],
-  },
-  {
-    id: 'diario_pensamento',
-    titulo: '📝 Diário de Pensamento (ABC)',
-    tempo: '3 min',
-    descricao: 'Registro rápido: Ativador → Crença → Consequência.',
-    passos: [
-      'A — O que aconteceu (ativador)?',
-      'B — O que você pensou na hora (crença)?',
-      'C — Como se sentiu e agiu (consequência)?',
-      'Agora reescreva B de forma mais realista.',
-    ],
-  },
-  {
-    id: 'ativacao',
-    titulo: '⚡ Ativação Comportamental',
-    tempo: '2 min',
-    descricao: 'Micro-ação para quebrar o ciclo de inércia.',
-    passos: [
-      'Escolha UMA ação pequena e possível agora:',
-      '• Levantar e beber água',
-      '• Abrir a janela e respirar 3 vezes',
-      '• Escrever uma frase sobre como se sente',
-      '• Dar 10 passos pelo ambiente',
-      'Faça agora. Não precisa ser perfeito.',
-    ],
-  },
-  {
-    id: 'resp_diafragmatica',
-    titulo: '🌬️ Respiração Diafragmática',
-    tempo: '2 min',
-    descricao: 'Técnica fisiológica validada para redução imediata de estresse.',
-    passos: [
-      'Coloque uma mão no peito e outra na barriga.',
-      'Inspire pelo nariz por 4 segundos (barriga infla).',
-      'Segure por 2 segundos.',
-      'Expire pela boca por 6 segundos (barriga desinfla).',
-      'Repita 5 vezes.',
-    ],
-  },
+const tecnicas = [
+  { id: 'dialogo', icon: '🧠', nome: 'Dialogo Socratico', desc: 'Examine seus pensamentos com perguntas guiadas para encontrar uma perspectiva mais equilibrada.' },
+  { id: 'sentidos', icon: '👁️', nome: 'Tecnica dos 5 Sentidos', desc: 'Ancore-se no presente usando os cinco sentidos: visao, audicao, tato, olfato e paladar.' },
+  { id: 'ativacao', icon: '⚡', nome: 'Ativacao Comportamental', desc: 'Engaje-se em atividades prazerosas para aumentar a energia e reduzir a inercia emocional.' },
+  { id: 'respiracao', icon: '🌬️', nome: 'Respiracao Diafragmatica', desc: 'Respire devagar usando o diafragma para acalmar o sistema nervoso e reduzir a tensao.' },
+];
+
+const perguntas = [
+  'Que evidencias voce tem de que esse pensamento e verdadeiro?',
+  'Que evidencias voce tem de que esse pensamento NAO e verdadeiro?',
+  'Se um amigo seu estivesse com esse pensamento, o que voce diria a ele?',
+  'Existe uma forma mais equilibrada de enxergar essa situacao?',
+  'Como voce se sente agora depois de refletir sobre isso?',
 ];
 
 export default function StressControlScreen() {
   const insets = useSafeAreaInsets();
-  const [aberta, setAberta] = useState(null);
+  const [activeId, setActiveId] = useState(null);
+  const [etapa, setEtapa] = useState('inicio');
+  const [pensamentoOriginal, setPensamentoOriginal] = useState('');
+  const [perguntaAtual, setPerguntaAtual] = useState(0);
+  const [respostas, setRespostas] = useState([]);
+  const [respostaAtual, setRespostaAtual] = useState('');
 
-  const toggle = (id) => setAberta(aberta === id ? null : id);
+  const resetDialogo = () => {
+    setEtapa('inicio'); setPensamentoOriginal(''); setPerguntaAtual(0); setRespostas([]); setRespostaAtual('');
+  };
+
+  const handleProximaPergunta = () => {
+    if (!respostaAtual.trim()) return;
+    const novasRespostas = [...respostas, respostaAtual.trim()];
+    setRespostas(novasRespostas); setRespostaAtual('');
+    if (perguntaAtual < perguntas.length - 1) {
+      setPerguntaAtual(perguntaAtual + 1);
+    } else {
+      setEtapa('resumo');
+    }
+  };
+
+  const renderDialogo = () => (
+    <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
+      {etapa === 'inicio' && (
+        <View style={{ backgroundColor: '#fff', borderRadius: 20, padding: 24, marginBottom: 20 }}>
+          <Text style={{ fontSize: 40, textAlign: 'center', marginBottom: 10 }}>🧠</Text>
+          <Text style={{ fontSize: 22, fontWeight: '700', color: '#333', textAlign: 'center', marginBottom: 12 }}>Dialogo Socratico</Text>
+          <Text style={{ fontSize: 16, color: '#555', textAlign: 'center', lineHeight: 22, marginBottom: 20 }}>
+            Uma conversa guiada com voce mesmo para examinar pensamentos angustiantes e encontrar uma perspectiva mais equilibrada.
+          </Text>
+          <TouchableOpacity onPress={() => setEtapa('escrevendo')} style={{ backgroundColor: '#667eea', borderRadius: 12, paddingVertical: 14, alignItems: 'center', marginBottom: 12 }}>
+            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600' }}>Comecar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setActiveId(null)} style={{ borderWidth: 1, borderColor: '#667eea', borderRadius: 12, paddingVertical: 14, alignItems: 'center' }}>
+            <Text style={{ color: '#667eea', fontSize: 16, fontWeight: '600' }}>Voltar as tecnicas</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {etapa === 'escrevendo' && (
+        <View style={{ backgroundColor: '#fff', borderRadius: 20, padding: 24, marginBottom: 20 }}>
+          <Text style={{ fontSize: 20, fontWeight: '700', color: '#333', textAlign: 'center', marginBottom: 16 }}>
+            Qual pensamento esta passando pela sua cabeca agora?
+          </Text>
+          <TextInput style={{ borderWidth: 1, borderColor: '#ddd', borderRadius: 12, padding: 14, fontSize: 16, color: '#333', minHeight: 100, backgroundColor: '#f9f9f9', marginBottom: 16 }}
+            value={pensamentoOriginal} onChangeText={setPensamentoOriginal} multiline
+            placeholder="Escreva aqui o que voce esta pensando..." placeholderTextColor="#888" textAlignVertical="top" />
+          <TouchableOpacity onPress={() => setEtapa('perguntas')}
+            style={{ backgroundColor: pensamentoOriginal.trim() ? '#667eea' : '#a0a0a0', borderRadius: 12, paddingVertical: 14, alignItems: 'center', marginBottom: 12 }}
+            disabled={!pensamentoOriginal.trim()}>
+            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600' }}>Proxima</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setEtapa('inicio')} style={{ borderWidth: 1, borderColor: '#667eea', borderRadius: 12, paddingVertical: 14, alignItems: 'center' }}>
+            <Text style={{ color: '#667eea', fontSize: 16, fontWeight: '600' }}>Voltar</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {etapa === 'perguntas' && (
+        <View style={{ backgroundColor: '#fff', borderRadius: 20, padding: 24, marginBottom: 20 }}>
+          <Text style={{ textAlign: 'center', color: '#667eea', fontWeight: '600', marginBottom: 10 }}>
+            Pergunta {perguntaAtual + 1} de {perguntas.length}
+          </Text>
+          <Text style={{ fontSize: 20, fontWeight: '700', color: '#333', textAlign: 'center', marginBottom: 16 }}>{perguntas[perguntaAtual]}</Text>
+          <TextInput style={{ borderWidth: 1, borderColor: '#ddd', borderRadius: 12, padding: 14, fontSize: 16, color: '#333', minHeight: 100, backgroundColor: '#f9f9f9', marginBottom: 16 }}
+            value={respostaAtual} onChangeText={setRespostaAtual} multiline
+            placeholder="Sua resposta..." placeholderTextColor="#888" textAlignVertical="top" />
+          <TouchableOpacity onPress={handleProximaPergunta}
+            style={{ backgroundColor: respostaAtual.trim() ? '#667eea' : '#a0a0a0', borderRadius: 12, paddingVertical: 14, alignItems: 'center', marginBottom: 12 }}
+            disabled={!respostaAtual.trim()}>
+            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600' }}>Proxima</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setEtapa('escrevendo')} style={{ borderWidth: 1, borderColor: '#667eea', borderRadius: 12, paddingVertical: 14, alignItems: 'center' }}>
+            <Text style={{ color: '#667eea', fontSize: 16, fontWeight: '600' }}>Voltar ao pensamento</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {etapa === 'resumo' && (
+        <View style={{ backgroundColor: '#fff', borderRadius: 20, padding: 24, marginBottom: 20 }}>
+          <Text style={{ fontSize: 22, fontWeight: '700', color: '#333', textAlign: 'center', marginBottom: 16 }}>Resumo do Dialogo Socratico</Text>
+          <Text style={{ fontSize: 15, fontWeight: '700', color: '#444', marginTop: 14, marginBottom: 4 }}>Pensamento original:</Text>
+          <Text style={{ fontSize: 15, color: '#555', lineHeight: 22 }}>{pensamentoOriginal}</Text>
+          {respostas.map((r, i) => (
+            <View key={i}>
+              <Text style={{ fontSize: 15, fontWeight: '700', color: '#444', marginTop: 14, marginBottom: 4 }}>{perguntas[i]}</Text>
+              <Text style={{ fontSize: 15, color: '#555', lineHeight: 22 }}>{r}</Text>
+            </View>
+          ))}
+          <Text style={{ fontSize: 15, fontWeight: '700', color: '#444', marginTop: 14, marginBottom: 4 }}>Nova perspectiva mais equilibrada:</Text>
+          <Text style={{ fontSize: 15, color: '#555', lineHeight: 22, marginBottom: 20 }}>{respostas[3] || 'Voce ainda esta refletindo sobre isso.'}</Text>
+          <TouchableOpacity onPress={() => setActiveId(null)} style={{ backgroundColor: '#667eea', borderRadius: 12, paddingVertical: 14, alignItems: 'center', marginBottom: 12 }}>
+            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600' }}>Sim, me sinto melhor</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={resetDialogo} style={{ borderWidth: 1, borderColor: '#667eea', borderRadius: 12, paddingVertical: 14, alignItems: 'center' }}>
+            <Text style={{ color: '#667eea', fontSize: 16, fontWeight: '600' }}>Ainda estou angustiado</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </ScrollView>
+  );
 
   return (
-    <LinearGradient colors={['#0a0e27', '#1a1040']} style={{flex:1}}>
-      <SafeAreaView style={{flex:1, paddingTop: insets.top + 8}}>
-        <ScrollView contentContainerStyle={{padding:20, paddingBottom:40}}>
-          <Text style={{color:'#fff', fontSize:22, fontWeight:'bold', textAlign:'center', marginBottom:4}}>🧠 Controle de Estresse</Text>
-          <Text style={{color:'rgba(255,255,255,0.4)', fontSize:12, textAlign:'center', marginBottom:20}}>Técnicas baseadas em Terapia Cognitivo-Comportamental</Text>
-
-          {TECNICAS.map((tec) => {
-            const isOpen = aberta === tec.id;
-            return (
-              <View key={tec.id} style={{backgroundColor:'rgba(255,255,255,0.06)', borderRadius:16, marginBottom:12, borderWidth:1, borderColor:'rgba(155,114,207,0.2)', overflow:'hidden'}}>
-                <TouchableOpacity onPress={() => toggle(tec.id)} style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between', padding:16}}>
-                  <View style={{flex:1}}>
-                    <Text style={{color:'#fff', fontSize:15, fontWeight:'600'}}>{tec.titulo}</Text>
-                    <Text style={{color:'rgba(255,255,255,0.4)', fontSize:12, marginTop:2}}>{tec.tempo} • {tec.descricao}</Text>
-                  </View>
-                  <Text style={{color:'#9b72cf', fontSize:18}}>{isOpen ? '▼' : '▶'}</Text>
-                </TouchableOpacity>
-                {isOpen && (
-                  <View style={{paddingHorizontal:16, paddingBottom:16}}>
-                    {tec.passos.map((passo, i) => (
-                      <Text key={i} style={{color:'#cbd5e1', fontSize:13, lineHeight:20, marginBottom:4}}>{passo}</Text>
-                    ))}
-                  </View>
+    <LinearGradient colors={['#667eea', '#764ba2']} style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, paddingTop: insets.top, paddingBottom: insets.bottom }}>
+        {activeId ? (
+          activeId === 'dialogo' ? renderDialogo() : (
+            <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
+              <View style={{ backgroundColor: '#fff', borderRadius: 20, padding: 24, marginBottom: 20 }}>
+                <Text style={{ fontSize: 40, textAlign: 'center', marginBottom: 10 }}>{tecnicas.find(t => t.id === activeId).icon}</Text>
+                <Text style={{ fontSize: 22, fontWeight: '700', color: '#333', textAlign: 'center', marginBottom: 12 }}>{tecnicas.find(t => t.id === activeId).nome}</Text>
+                <Text style={{ fontSize: 16, color: '#555', textAlign: 'center', lineHeight: 22, marginBottom: 20 }}>{tecnicas.find(t => t.id === activeId).desc}</Text>
+                {activeId === 'sentidos' && (
+                  <Text style={{ fontSize: 16, color: '#555', lineHeight: 24, marginBottom: 20 }}>
+                    Observe ao seu redor:{'\n\n'}
+                    5 coisas que voce consegue ver{'\n'}
+                    4 coisas que voce consegue tocar{'\n'}
+                    3 coisas que voce consegue ouvir{'\n'}
+                    2 coisas que voce consegue sentir o cheiro{'\n'}
+                    1 coisa que voce consegue provar{'\n\n'}
+                    Esse exercicio ajuda a trazer a atencao de volta ao presente.
+                  </Text>
                 )}
+                {activeId === 'ativacao' && (
+                  <Text style={{ fontSize: 16, color: '#555', lineHeight: 24, marginBottom: 20 }}>
+                    Escolha uma atividade pequena e prazerosa, como ouvir musica, caminhar, tomar banho ou ligar para um amigo. {'\n\n'}
+                    Agende um horario para realiza-la hoje e observe como seu humor se altera ao cumprir o compromisso consigo mesmo.
+                  </Text>
+                )}
+                {activeId === 'respiracao' && (
+                  <Text style={{ fontSize: 16, color: '#555', lineHeight: 24, marginBottom: 20 }}>
+                    Sente-se confortavelmente, com uma mao no peito e outra no abdome.{'\n\n'}
+                    1. Inspire lentamente pelo nariz, sentindo o abdome subir.{'\n'}
+                    2. Segure a respiracao por alguns segundos.{'\n'}
+                    3. Expire devagar pela boca, soltando o ar completamente.{'\n\n'}
+                    Repita por cerca de 5 minutos, mantendo o ritmo calmo e regular.
+                  </Text>
+                )}
+                <TouchableOpacity onPress={() => setActiveId(null)} style={{ borderWidth: 1, borderColor: '#667eea', borderRadius: 12, paddingVertical: 14, alignItems: 'center' }}>
+                  <Text style={{ color: '#667eea', fontSize: 16, fontWeight: '600' }}>Voltar as tecnicas</Text>
+                </TouchableOpacity>
               </View>
-            );
-          })}
-
-          <Text style={{color:'rgba(255,255,255,0.25)', fontSize:10, textAlign:'center', marginTop:10}}>
-            Baseado em princípios da TCC (Beck, 2011) e técnicas de relaxamento com evidência científica.
-          </Text>
-        </ScrollView>
+            </ScrollView>
+          )
+        ) : (
+          <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
+            <Text style={{ fontSize: 28, fontWeight: '700', color: '#fff', marginBottom: 6 }}>Controle do Estresse</Text>
+            <Text style={{ fontSize: 16, color: '#e0e0e0', marginBottom: 20 }}>Escolha uma tecnica para praticar agora.</Text>
+            {tecnicas.map(tec => (
+              <TouchableOpacity key={tec.id} onPress={() => setActiveId(tec.id)}
+                style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 16, padding: 18, marginBottom: 14 }}>
+                <Text style={{ fontSize: 32, marginRight: 16 }}>{tec.icon}</Text>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontSize: 18, fontWeight: '600', color: '#333', marginBottom: 4 }}>{tec.nome}</Text>
+                  <Text style={{ fontSize: 14, color: '#666', lineHeight: 20 }}>{tec.desc}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        )}
       </SafeAreaView>
     </LinearGradient>
   );

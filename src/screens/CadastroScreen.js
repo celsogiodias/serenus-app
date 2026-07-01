@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   SafeAreaView, Alert, ActivityIndicator, KeyboardAvoidingView, Platform
@@ -21,7 +21,7 @@ export default function CadastroScreen({ navigation }) {
       Alert.alert('Atenção', 'Preencha todos os campos.');
       return;
     }
-    if (senha.length &lt; 6) {
+    if (senha.length < 6) {
       Alert.alert('Atenção', 'A senha deve ter pelo menos 6 caracteres.');
       return;
     }
@@ -44,28 +44,24 @@ export default function CadastroScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.content}>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.content}>
         <View style={styles.logoContainer}>
           <Ionicons name="moon" size={48} color="#9b59b6" />
           <Text style={styles.appNome}>Criar Conta</Text>
-          <Text style={styles.appSubtitulo}>Noite Serena</Text>
+          <Text style={styles.appSubtitulo}>Serenar</Text>
         </View>
 
         <TextInput style={styles.input} placeholder="Nome" placeholderTextColor="#666"
           value={nome} onChangeText={setNome} />
-
         <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#666"
-          value={email} onChangeText={setEmail} keyboardType="email-address"
-          autoCapitalize="none" />
+          value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
 
         <View style={styles.senhaContainer}>
           <TextInput style={[styles.input, { marginBottom: 0, flex: 1 }]}
             placeholder="Senha (mín. 6 caracteres)" placeholderTextColor="#666"
             value={senha} onChangeText={setSenha}
             secureTextEntry={!mostrarSenha} />
-          <TouchableOpacity onPress={() => setMostrarSenha(!mostrarSenha)}
-            style={styles.olho}>
+          <TouchableOpacity onPress={() => setMostrarSenha(!mostrarSenha)} style={styles.olho}>
             <Ionicons name={mostrarSenha ? 'eye-off' : 'eye'} size={22} color="#666" />
           </TouchableOpacity>
         </View>
@@ -76,15 +72,11 @@ export default function CadastroScreen({ navigation }) {
 
         <TouchableOpacity style={[styles.botao, loading && styles.botaoDisabled]}
           onPress={cadastrar} disabled={loading}>
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.botaoTexto}>Criar conta</Text>
-          )}
+          {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.botaoTexto}>Criar Conta</Text>}
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.link} onPress={() => navigation.goBack()}>
-          <Text style={styles.linkTexto}>Já tem conta? <Text style={styles.linkDestaque}>Fazer login</Text></Text>
+        <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.linkTexto}>Já tem conta? <Text style={styles.linkDestaque}>Faça login</Text></Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -97,13 +89,10 @@ const styles = StyleSheet.create({
   logoContainer: { alignItems: 'center', marginBottom: 32 },
   appNome: { color: '#fff', fontSize: 24, fontWeight: '700', marginTop: 8 },
   appSubtitulo: { color: '#888', fontSize: 14, marginTop: 4 },
-  input: {
-    backgroundColor: '#2a1a3e', borderRadius: 12, padding: 16,
-    color: '#fff', fontSize: 16, marginBottom: 14
-  },
-  senhaContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 14 },
+  input: { backgroundColor: '#2a1a3e', borderRadius: 12, padding: 16, color: '#fff', fontSize: 16, marginBottom: 16 },
+  senhaContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
   olho: { padding: 12, marginLeft: -48 },
-  botao: { backgroundColor: '#9b59b6', padding: 16, borderRadius: 12, alignItems: 'center' },
+  botao: { backgroundColor: '#9b59b6', padding: 16, borderRadius: 12, alignItems: 'center', marginTop: 8 },
   botaoDisabled: { opacity: 0.6 },
   botaoTexto: { color: '#fff', fontSize: 17, fontWeight: '600' },
   link: { marginTop: 24, alignItems: 'center' },

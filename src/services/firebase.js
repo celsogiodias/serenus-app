@@ -1,20 +1,18 @@
-import { initializeApp } from 'firebase/app';
+﻿import { initializeApp } from 'firebase/app';
 import { getAuth, initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// 🔥 SUBSTITUA PELOS DADOS DO SEU FIREBASE
 const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
-  authDomain: "SEU_PROJETO.firebaseapp.com",
-  projectId: "SEU_PROJETO",
-  storageBucket: "SEU_PROJETO.appspot.com",
-  messagingSenderId: "SEU_SENDER_ID",
-  appId: "SEU_APP_ID"
+  apiKey: "AIzaSyD-wlxjf7Nn5WC1Wg7-Rc_GY0XvFIlTv5M",
+  authDomain: "serenus-app.firebaseapp.com",
+  projectId: "serenus-app",
+  storageBucket: "serenus-app.firebasestorage.app",
+  messagingSenderId: "72637181302",
+  appId: "1:72637181302:web:23c0fb7b72f658c8cfde57"
 };
 
 const app = initializeApp(firebaseConfig);
 
-// Persistência para manter login mesmo fechando o app
 const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage)
 });
