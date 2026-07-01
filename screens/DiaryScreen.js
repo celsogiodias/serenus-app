@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const STORAGE_KEY = '@noite_serena_diary';
+const STORAGE_KEY = '@serenar_diary';
 
 export default function DiaryScreen() {
   const insets = useSafeAreaInsets();

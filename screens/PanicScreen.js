@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const STORAGE_KEY = '@noite_serena_panic';
+const STORAGE_KEY = '@serenar_panic';
 
 const GROUNDING_STEPS = [
   { label: 'Veja 5 coisas', desc: 'Olhe ao redor e identifique 5 objetos diferentes' },

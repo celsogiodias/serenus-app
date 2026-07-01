@@ -4,8 +4,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const STORAGE_KEY = '@serenus_user_data';
-const CLEAR_KEYS = ['@noite_serena_diary', '@noite_serena_panic'];
+cconst STORAGE_KEY = '@serenar_user_data';
+const CLEAR_KEYS = ['@serenar_diary', '@serenar_panic'];
 
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();

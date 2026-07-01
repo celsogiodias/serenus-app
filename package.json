@@ -1,5 +1,6 @@
 {
-  "name": "noite-serena-funcional",
+  "name": "serenar-app",
+"description": "Plataforma digital de saúde mental multi-crises com ferramentas de regulação emocional",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
