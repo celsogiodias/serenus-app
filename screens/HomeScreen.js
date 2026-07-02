@@ -27,7 +27,7 @@ export default function HomeScreen({ navigation }) {
       const dados = JSON.parse(await AsyncStorage.getItem('@serenus_user_data') || '{}');
       if (dados.emergenciaTel) {
         const tel = dados.emergenciaTel.replace(/\D/g, '');
-        const msg = encodeURIComponent(`Olá ${dados.emergenciaNome || 'socorro'}, estou precisando de ajuda. (Enviado pelo Serenus)`);
+        const msg = encodeURIComponent(`Olá ${dados.emergenciaNome || 'socorro'}, estou precisando de ajuda. (Enviado pelo Serenar)`);
         Linking.openURL(`https://wa.me/55${tel}?text=${msg}`);
       } else {
         navigation.navigate('Settings');
